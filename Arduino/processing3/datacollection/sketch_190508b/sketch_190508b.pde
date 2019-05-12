@@ -1,0 +1,20 @@
+import processing.serial.*;
+Serial mySerial;
+PrintWriter output;
+void setup() {
+mySerial = new Serial( this, Serial.list()[0], 115200);
+output = createWriter( "data.txt" );
+}
+void draw() {
+if (mySerial.available() > 0 ) {
+  //String value = mySerial.readString();
+  //if ( value != null ) {
+  output.println( sensorValue[] );
+  //}
+}
+}
+void keyPressed() {
+output.flush(); // Writes the remaining data to the file
+output.close(); // Finishes the files
+exit(); // Stops the program
+}
