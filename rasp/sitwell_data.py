@@ -7,8 +7,8 @@ import os.path
 ser = serial.Serial('/dev/ttyACM0',1000000)
 data = []
 dataFile = open("data/" + datetime.now().strftime("%m_%d_%Y_%H_%M_%S")+'.csv','w')
+# dataFile = open("data/milestone2.csv",'w')
 
-# ser.readline()
 def collecting(target):
 	for i in range(200):
 		read_serial = ser.readline().decode('utf-8').strip(',\r\n') + ',' + target+'\n'
