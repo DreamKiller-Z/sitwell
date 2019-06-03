@@ -36,7 +36,7 @@ def collecting(target):
 choose = True
 while(choose):
     print ("---------------------")
-    print("1. collect data \n2. save and end \n3. delete csv \n4. look at testdata.csv")
+    print("1. collect data \n")
     print ("---------------------")
     answer = input()
     print(answer)
