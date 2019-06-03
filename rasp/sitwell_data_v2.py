@@ -10,21 +10,29 @@ dataFile = open("data/" + datetime.now().strftime("%m_%d_%Y_%H_%M_%S")+'.csv','w
 # dataFile = open("data/milestone2.csv",'w')
 
 def collecting(target):
-    for i in range(20):
-        # try:
-        read_serial = ser.readline().decode('utf-8').strip(',\r\n') + ',' + target+'\n'
-        # except UnicodeDecodeError:
-
-        print("prepare to readline")
-        # read_serial = ser.readline().strip(',\r\n') + ',' + target+'\n'
-        count = len(read_serial.split(","))
-        if count != 321:
-            # print(count)
-            # print(read_serial)
-            continue
-        else:
-            dataFile.write(read_serial)
-            print(read_serial)
+    while(True):
+        print("get into while")
+        for i in range(20):
+            print("get into for")
+        # while(True):
+            try:
+                read_serial = ser.readline().decode('utf-8').strip(',\r\n') + ',' + target+'\n'
+            except UnicodeDecodeError:
+                continue
+            print("prepare to readline")
+            # read_serial = ser.readline().strip(',\r\n') + ',' + target+'\n'
+            count = len(read_serial.split(","))
+            if count != 321:
+                print(count)
+                # print(read_serial)
+                continue
+            else:
+                dataFile.write(read_serial)
+                print(read_serial)
+        print("Continue? y / n")
+        if_continue = input()
+        if if_continue == "n":
+            break
 choose = True
 while(choose):
     print ("---------------------")

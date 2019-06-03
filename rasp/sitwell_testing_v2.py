@@ -29,17 +29,17 @@ try:
 except pickle.UnpicklingError:
 	pass
 
-df = pd.DataFrame()
-columns = [str(i) for i in range(320)]
-columns.append("target")
-for filename in glob.glob('data/*.csv'):
-		df_temp = pd.read_csv(filename, names=columns)
-		df =df.append(df_temp)
-static = np.asarray(df, dtype=np.float32)
-static = static[static[:,-1]==0]
+# df = pd.DataFrame()
+# columns = [str(i) for i in range(320)]
+# columns.append("target")
+# for filename in glob.glob('data/*.csv'):
+# 		df_temp = pd.read_csv(filename, names=columns)
+# 		df =df.append(df_temp)
+# static = np.asarray(df, dtype=np.float32)
+# static = static[static[:,-1]==0]
 
-static = np.average(static, axis = 0)
-static = static[:-1]
+# static = np.average(static, axis = 0)
+# static = static[:-1]
 
 buff = []
 def gb_predict(test_data):
@@ -55,9 +55,23 @@ def gb_predict(test_data):
 def most_frequent(List): 
     return max(set(List), key = List.count) 
 
-def dataprocess(data):
-	result = static - data
-	return result
+def dataprocess(np_data):
+	np_range = np.arange(64)
+	# np_final = np.array([]).reshape(,1)
+	np_newdata = np_data[np_range]
+	feature = np.mean(np_newdata)
+
+	# label_count = len(np.unique(label))
+	# print(label_count)
+	for i in range(4):
+		np_range += 64
+		#   print(np_range)
+		np_newdata = np_data[np_range]
+		#   print(np_newdata)
+		newfeature = np.mean(np_newdata)
+		#   print(newfeature)
+		feature = np.append(feature, newfeature)
+	return feature
 
 def collecting():
 	while (True):
@@ -67,6 +81,7 @@ def collecting():
 			continue
 		# data = np.array(read_serial, dtype = np.float32)/600
 		count = len(read_serial.split(","))
+		
 		if count != 320:
 			continue
 		else:

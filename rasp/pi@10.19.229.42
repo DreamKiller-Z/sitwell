@@ -21,29 +21,31 @@ warnings.filterwarnings('ignore', category=DeprecationWarning)
 import os, glob
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn import metrics
+from sklearn.decomposition import PCA
 
 ser = serial.Serial('/dev/ttyACM0',1000000)
 data = []
 try:
 	loaded_model = pickle.load(open("milestone2.pickle.dat", "rb"))
+	sc = pickle.load(open("sc.pickle.dat", "rb"))
+	pca = pickle.load(open("pca.pickle.dat", "rb"))
 except pickle.UnpicklingError:
 	pass
 
-df = pd.DataFrame()
-columns = [str(i) for i in range(320)]
-columns.append("target")
-for filename in glob.glob('data/*.csv'):
-		df_temp = pd.read_csv(filename, names=columns)
-		df =df.append(df_temp)
-static = np.asarray(df, dtype=np.float32)
-static = static[static[:,-1]==0]
+# df = pd.DataFrame()
+# columns = [str(i) for i in range(320)]
+# columns.append("target")
+# for filename in glob.glob('data/*.csv'):
+# 		df_temp = pd.read_csv(filename, names=columns)
+# 		df =df.append(df_temp)
+# static = np.asarray(df, dtype=np.float32)
+# static = static[static[:,-1]==0]
 
-static = np.average(static, axis = 0)
-static = static[:-1]
+# static = np.average(static, axis = 0)
+# static = static[:-1]
 
 buff = []
 def gb_predict(test_data):
-
 	prediction =int(loaded_model.predict(test_data))
 	buff.append(prediction)
 	if len(buff) > 10:
@@ -56,8 +58,11 @@ def most_frequent(List):
     return max(set(List), key = List.count) 
 
 def dataprocess(data):
-	result = static - data
-	return result
+	# pca = PCA(n_components=5)
+	sc_result = sc.transform(data.reshape(1,-1))
+	pca_result = pca.transform(sc_result)  
+	# result = static - data
+	return pca_result
 
 def collecting():
 	while (True):
@@ -77,7 +82,7 @@ def collecting():
 			processed = dataprocess(data)
 			# if np.average(processed)/np.average(static) > 0.1:
 				# pressure = True
-			processed = processed.reshape(1,-1)
+			# processed = processed.reshape(1,-1)
 			gb_predict(processed)
 			# else:
 				# pressure = False
