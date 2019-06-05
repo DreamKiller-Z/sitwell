@@ -32,18 +32,40 @@ import pickle
 df = pd.DataFrame()
 columns = [str(i) for i in range(320)]
 columns.append("target")
-for filename in glob.glob('data/*.csv'):
-  df_temp = pd.read_csv(filename, names=columns)
-  df =df.append(df_temp)
-# print(df)
+
+filelist = []   
+
+for filename in glob.glob('data/*.csv'):    # list all csv 
+    filename = filename[5:]
+    print(filename)
+    filelist.append(filename)
+print("whose data you want to train on? input someone's name")
+username = input()
+
+# for filename in glob.glob('data/*.csv'):
+#     if (filename[5:] == username + '.csv'):
+#         df_temp = pd.read_csv(filename, names=columns)
+#         df =df.append(df_temp)
+if username == "all":
+    for filename in glob.glob('data/*.csv'):    # gather data
+        df_temp = pd.read_csv(filename, names=columns)
+        df =df.append(df_temp)
+elif ('data/' + username+'.csv') not in glob.glob('data/*.csv'):    #Error if no person's data
+    # print(username)
+    print("No this person's data")
+else:
+    df_temp = pd.read_csv("data/static.csv", names=columns)
+    df =df.append(df_temp)
+    for filename in glob.glob('data/' + username + '*.csv'):    # gather data
+        df_temp = pd.read_csv(filename, names=columns)
+        df =df.append(df_temp)
+
 # static = np.asarray(df, dtype=np.float32)
 # static = static[static[:,-1]==0]
-# # static_wlabel = static
 # static = static[:,:-1]
-# # print(static.shape)
 
-# static_mean = np.average(static, axis = 0)
-  
+# static_mean = np.mean(static, axis = 0)
+
 # static_std = np.std(static, axis = 0)
 
 # static_result = (static - static_mean)/static_std
@@ -54,8 +76,8 @@ label = np.asarray(label, dtype=np.int64)
 df0 = df.iloc[:, :-1]
 np0 = np.array(df0, dtype = np.float32)
 
-
-
+# np_result = static_mean - np0
+# np_result = np.divide(np0, static_mean)
 # np0 = np0[np0[:,-1] != 0]
 # print(np0.shape)
 # np0_mean = np.mean(np0, axis = 0)
@@ -65,14 +87,14 @@ np0 = np.array(df0, dtype = np.float32)
 # np_result = (np0 - np0_mean)/np0_std
 # print(np_result.shape)
 train_data, test_data, train_label, test_label = train_test_split(np0, label, test_size = 0.2, random_state = 101)
+# standard scaler
+# sc = StandardScaler()  
+# sc.fit(train_data)
+# test_data = sc.transform(test_data)
+# train_data = sc.transform(train_data)
+# pickle.dump(sc, open("sc.pickle.dat", "wb"))
 
-sc = StandardScaler()  
-sc.fit(train_data)
-test_data = sc.transform(test_data)
-train_data = sc.transform(train_data)
-pickle.dump(sc, open("sc.pickle.dat", "wb"))
-
-pca = PCA(n_components=5)
+pca = PCA(n_components=10)
 pca.fit(train_data) 
 train_data = pca.transform(train_data)
 test_data = pca.transform(test_data)

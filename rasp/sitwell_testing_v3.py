@@ -58,13 +58,49 @@ def most_frequent(List):
     return max(set(List), key = List.count) 
 
 def dataprocess(data):
-	# pca = PCA(n_components=5)
-	sc_result = sc.transform(data.reshape(1,-1))
-	pca_result = pca.transform(sc_result)  
-	# result = static - data
+	data = data.reshape(1,-1)
+	# sc_result = sc.transform(data.reshape(1,-1))
+	pca_result = pca.transform(data)  
 	return pca_result
 
+def static_collect():
+	static_data = []
+	for _ in range(60):
+		try:
+			read_serial = ser.readline().decode('utf-8').strip(',\r\n')
+		except UnicodeDecodeError:
+			continue
+		# data = np.array(read_serial, dtype = np.float32)/600
+		count = len(read_serial.split(","))
+		if count != 320:
+			continue
+		else:
+			data = read_serial.split(',')
+			# print(data)
+			data = np.asarray(data, dtype= np.float32)
+		static_data.append(data)
+	static_data = np.asarray(static_data, dtype=np.float32)
+	static_mean = np.amax(static_data, axis = 0)
+	return static_mean
+	
+
+# def read_data():
+# 	try:
+# 		read_serial = ser.readline().decode('utf-8').strip(',\r\n')
+# 	except UnicodeDecodeError:
+# 		continue
+# 	# data = np.array(read_serial, dtype = np.float32)/600
+# 	count = len(read_serial.split(","))
+# 	if count != 320:
+# 		continue
+# 	else:
+# 		data = read_serial.split(',')
+# 		# print(data)
+# 		data = np.asarray(data, dtype= np.float32)
+# 	return data
+
 def collecting():
+	# static = static_collect()
 	while (True):
 		try:
 			read_serial = ser.readline().decode('utf-8').strip(',\r\n')
@@ -78,7 +114,10 @@ def collecting():
 			data = read_serial.split(',')
 			# print(data)
 			data = np.asarray(data, dtype= np.float32)
+			
 			# print(data)
+			# data = static - data
+			# data = np.divide(data, static)
 			processed = dataprocess(data)
 			# if np.average(processed)/np.average(static) > 0.1:
 				# pressure = True
@@ -92,6 +131,6 @@ def collecting():
 			
 			# dataFile.write(read_serial)
 			# print(read_serial)
-while(True):
-	collecting()
+
+collecting()
 	
