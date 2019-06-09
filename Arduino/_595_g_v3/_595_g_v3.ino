@@ -46,8 +46,8 @@ int getValue(uint8_t pin, uint8_t x, uint8_t y, boolean mode){
 void setup() {
   
   // put your setup code here, to run once:
-  Serial.begin(1000000);
-//  Serial.begin(115200);
+//  Serial.begin(1000000);
+  Serial.begin(115200);
   SPI.begin();
   pinMode(SRCLR,OUTPUT);
   pinMode(RCLK,OUTPUT);
@@ -70,7 +70,7 @@ void loop() {
   
   boolean mode = true;
   int sensorValue[64] = {0};
-  for (uint8_t pin = 0; pin != 5; pin ++) {
+  for (uint8_t pin = 0; pin != 4; pin ++) {
     String result = "";
     uint8_t row = 0;
     uint8_t col = 0;

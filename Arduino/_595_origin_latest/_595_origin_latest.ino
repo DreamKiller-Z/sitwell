@@ -2,7 +2,7 @@
 
 #define SRCLR 2
 #define RCLK 8
-#define Sensor A3
+#define Sensor A4
 
 int getValue(uint8_t x,uint8_t y,boolean mode){
   uint8_t tx_buffer[4];
