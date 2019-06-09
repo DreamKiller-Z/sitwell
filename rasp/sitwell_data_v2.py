@@ -3,10 +3,12 @@ import serial
 # import numpy as np
 from datetime import datetime
 import os.path
+import os, glob
+
 # import keyboard
-ser = serial.Serial('/dev/ttyACM0',1000000)
+ser = serial.Serial('/dev/ttyACM0',115200)
 data = []
-dataFile = open("data/" + datetime.now().strftime("%m_%d_%Y_%H_%M_%S")+'.csv','w')
+# dataFile = open("data/" + datetime.now().strftime("%m_%d_%Y_%H_%M_%S")+'.csv','w')
 # dataFile = open("data/milestone2.csv",'w')
 
 def collecting(target):
@@ -22,7 +24,7 @@ def collecting(target):
             print("prepare to readline")
             # read_serial = ser.readline().strip(',\r\n') + ',' + target+'\n'
             count = len(read_serial.split(","))
-            if count != 321:
+            if count != 257:
                 print(count)
                 # print(read_serial)
                 continue
@@ -33,14 +35,29 @@ def collecting(target):
         if_continue = input()
         if if_continue == "n":
             break
+
 choose = True
+print("Whose data am I going to collect?")
+username = input()
 while(choose):
     print ("---------------------")
     print("1. collect data \n")
     print ("---------------------")
     answer = input()
-    print(answer)
+    # print(answer)
+
     if answer == '1':
+        
+        
+        file_count = 0
+        filename = "data/"+username+str(file_count)+".csv"
+        while(True):
+            if filename in glob.glob("data/*.csv"):
+                file_count += 1
+                filename = "data/"+username+str(file_count)+".csv"
+            else:
+                break
+        dataFile = open(filename, "w")
         print("target label? 0 for static")
         choose_label = input()
         # print("collecting data")

@@ -22,15 +22,19 @@ import os, glob
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn import metrics
 from sklearn.decomposition import PCA
+import pickle
+from tensorflow.keras.models import load_model
 
 ser = serial.Serial('/dev/ttyACM0',115200)
 data = []
-try:
-	loaded_model = pickle.load(open("milestone2.pickle.dat", "rb"))
-	# sc = pickle.load(open("sc.pickle.dat", "rb"))
-	pca = pickle.load(open("pca.pickle.dat", "rb"))
-except pickle.UnpicklingError:
-	pass
+loaded_model=load_model('model.h5')
+# try:
+    
+# 	# loaded_model = pickle.load(open("cnn.pickle.dat", "rb"))
+# 	# sc = pickle.load(open("sc.pickle.dat", "rb"))
+# 	# pca = pickle.load(open("pca.pickle.dat", "rb"))
+# except pickle.UnpicklingError:
+# 	pass
 
 # df = pd.DataFrame()
 # columns = [str(i) for i in range(320)]
@@ -46,38 +50,41 @@ except pickle.UnpicklingError:
 
 buff = []
 def gb_predict(test_data):
-	prediction =int(loaded_model.predict(test_data))
-	buff.append(prediction)
-	if len(buff) > 20:
-		buff.pop(0)
-		result = most_frequent(buff)
-		if result == 0:
-			print("No pressure")
-		if result == 1:
-			print("Straight")
-		if result == 2:
-			print("Leaning forward")
-		if result == 3:
-			print("Leaning backward")
-		if result == 4:
-			print("Leaning left")
-		if result == 5:
-			print("Leaning right")
-		# print(result)
-	# return result
+    prediction =loaded_model.predict(test_data)
+    result = int(np.argmax(prediction))
+    # print(result)
+    buff.append(result)
+    if len(buff) > 20:
+        buff.pop(0)
+        result = most_frequent(buff)
+        print(result)
+        if result == 0:
+            print("No pressure")
+        if result == 1:
+            print("Straight")
+        if result == 2:
+            print("Leaning forward")
+        if result == 3:
+            print("Leaning backward")
+        if result == 4:
+            print("Leaning left")
+        if result == 5:
+            print("Leaning right")
+    # print(pre)
+    # return result
 
 def most_frequent(List): 
     return max(set(List), key = List.count) 
 
 def dataprocess(data):
-	data = data.reshape(1,-1)
+	data = data.reshape(1,16,16,1)
 	# sc_result = sc.transform(data.reshape(1,-1))
-	pca_result = pca.transform(data)  
-	return pca_result
+	# pca_result = pca.transform(data)  
+	return data
 
 def static_collect():
 	static_data = []
-	for _ in range(10):
+	for _ in range(60):
 		try:
 			read_serial = ser.readline().decode('utf-8').strip(',\r\n')
 		except UnicodeDecodeError:
@@ -112,30 +119,25 @@ def static_collect():
 # 	return data
 
 def collecting():
-	# static = static_collect()
-	while (True):
-		try:
-			read_serial = ser.readline().decode('utf-8').strip(',\r\n')
-		except UnicodeDecodeError:
-			continue
-		# data = np.array(read_serial, dtype = np.float32)/600
-		count = len(read_serial.split(","))
-		if count != 256:
-			print(count)
-			continue
-		else:
-			data = read_serial.split(',')
-			# print(data)
-			data = np.asarray(data, dtype= np.float32)
-			
-			# print(data)
-			# data = static - data
-			# data = np.divide(data, static)
-			processed = dataprocess(data)
+    static = static_collect()
+    while (True):
+        try:
+            read_serial = ser.readline().decode('utf-8').strip(',\r\n')
+        except UnicodeDecodeError:
+            continue
+        count = len(read_serial.split(","))
+        if count != 256:
+            print(count)
+            continue
+        else:
+            data = read_serial.split(',')
+            data = np.asarray(data, dtype= np.float32)
+            data = static - data
+            processed = dataprocess(data)
 			# if np.average(processed)/np.average(static) > 0.1:
 				# pressure = True
 			# processed = processed.reshape(1,-1)
-			gb_predict(processed)
+            gb_predict(processed)
 			# else:
 				# pressure = False
 				# print("No Pressure")

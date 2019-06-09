@@ -30,7 +30,7 @@ import pickle
 # data processing
 
 df = pd.DataFrame()
-columns = [str(i) for i in range(320)]
+columns = [str(i) for i in range(256)]
 columns.append("target")
 
 filelist = []   
@@ -46,17 +46,20 @@ username = input()
 #     if (filename[5:] == username + '.csv'):
 #         df_temp = pd.read_csv(filename, names=columns)
 #         df =df.append(df_temp)
+
 if username == "all":
     for filename in glob.glob('data/*.csv'):    # gather data
         df_temp = pd.read_csv(filename, names=columns)
         df =df.append(df_temp)
-elif ('data/' + username+'.csv') not in glob.glob('data/*.csv'):    #Error if no person's data
-    # print(username)
-    print("No this person's data")
+# elif ('data/' + username+'*.csv') not in glob.glob('data/*.csv'):    #Error if no person's data
+#     # print(username)
+#     print("No this person's data")
 else:
-    df_temp = pd.read_csv("data/static.csv", names=columns)
-    df =df.append(df_temp)
+    for filename in glob.glob('data/static*.csv'):    # gather data
+        df_temp = pd.read_csv(filename, names=columns)
+        df =df.append(df_temp)
     for filename in glob.glob('data/' + username + '*.csv'):    # gather data
+        # if username in filename:
         df_temp = pd.read_csv(filename, names=columns)
         df =df.append(df_temp)
 
@@ -94,12 +97,11 @@ train_data, test_data, train_label, test_label = train_test_split(np0, label, te
 # train_data = sc.transform(train_data)
 # pickle.dump(sc, open("sc.pickle.dat", "wb"))
 
-pca = PCA(n_components=10)
+pca = PCA(n_components=16)
 pca.fit(train_data) 
 train_data = pca.transform(train_data)
 test_data = pca.transform(test_data)
 pickle.dump(pca, open("pca.pickle.dat", "wb"))
-
 
 clf = GradientBoostingClassifier(n_estimators=100, learning_rate=1,
      max_depth=4, random_state=0).fit(train_data, train_label)
