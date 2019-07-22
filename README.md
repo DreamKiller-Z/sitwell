@@ -6,7 +6,32 @@ From our interview process, we found that people are vaguely aware of the fact t
 ## User Research
 We design a survey and get over 300 responses,
 Half of the users sit more than 6 hours,half of the people take a break or stand up every 2+ hours, half of the users are concerned about their sitting habits, more than 85% of the people concern bad sitting affect their health.
-
-
+![user research](https://user-images.githubusercontent.com/20251285/61606186-e515d680-abfd-11e9-939b-501ae658f50c.png)
+![user research2](https://user-images.githubusercontent.com/20251285/61606188-e515d680-abfd-11e9-8e34-4fdea60abe08.png)
 
 Here is the link to our full survey result: https://docs.google.com/spreadsheets/d/19VHJsDAoxdRkpV4vnQF-0a0ltL_bWdiwvrCeV5GKE9M/edit#gid=793808212
+
+## Software 
+We use a FSR matrix to sense the force pressure and pass the data collected to the raspberry pi to do further data processing. The pre-trained machine learning model in the raspberry pi will recognize and data and predict the sitting postures. Meanwhile, the prediction will be uploaded to the firebase to show it to the front-end IOS app.
+Software Diagram:
+
+![software](https://user-images.githubusercontent.com/20251285/61606184-e47d4000-abfd-11e9-8214-3630c43a00fd.png)
+APP UI:
+
+![](https://user-images.githubusercontent.com/20251285/61606185-e47d4000-abfd-11e9-9a4f-8548c7d0d9cd.png)
+![software](https://user-images.githubusercontent.com/20251285/61606192-e515d680-abfd-11e9-839d-6be9945412df.gif)
+
+## Harware
+We use 5 force sensitive resistors(FSR) to sense the sitting pressure and connect them to the PCB boards we designed that had shift registers, MUX, capacitors soldered on them. The PCB boards will then be connected to the arduino, so arduino can collect raw data. Aruino then will pass the data to the raspberry pi to do data processing. A buzzer connected to a power adapter will also be connected to the raspberry pi, so after the user has been sitting for a long time, it will buzz.
+
+![software](https://user-images.githubusercontent.com/20251285/61606190-e515d680-abfd-11e9-94d8-d78efac94897.png)
+
+Besides that, we designed several versions of the 3D models that best contain all the hardwares with minimum size.
+
+![software](https://user-images.githubusercontent.com/20251285/61606198-f2cb5c00-abfd-11e9-83d2-a3675bc82830.png)
+![software](https://user-images.githubusercontent.com/20251285/61606203-f5c64c80-abfd-11e9-8fd4-4ff361466377.png)
+
+
+
+
+
