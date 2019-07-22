@@ -18,7 +18,6 @@ Software Diagram:
 ![software](https://user-images.githubusercontent.com/20251285/61606184-e47d4000-abfd-11e9-8214-3630c43a00fd.png)
 APP UI:
 
-![](https://user-images.githubusercontent.com/20251285/61606185-e47d4000-abfd-11e9-9a4f-8548c7d0d9cd.png)
 ![software](https://user-images.githubusercontent.com/20251285/61606192-e515d680-abfd-11e9-839d-6be9945412df.gif)
 
 ## Harware
